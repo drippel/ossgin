@@ -135,24 +135,6 @@
                             <goal>single</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>sets</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
-                        <configuration>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <finalName>sets</finalName>
-                            <archive>
-                                <manifest>
-                                    <mainClass>dr.cards.gin.straight.Set</mainClass>
-                                </manifest>
-                            </archive>
-                        </configuration>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
 

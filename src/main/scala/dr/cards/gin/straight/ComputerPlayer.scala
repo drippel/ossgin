@@ -3,6 +3,8 @@ package dr.cards.gin.straight
 import java.util.Random
 
 /*
+ * Should players make mistakes or miss plays at random?
+ *
  * Levels of player
  * Random
  *   0  picks from stock/discard at random, discards at random
