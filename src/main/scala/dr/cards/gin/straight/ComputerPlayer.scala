@@ -50,6 +50,7 @@ object ComputerPlayer {
     level match {
       case 0 => { Some(randomPlayer()) }
       case 1 => { Some(beginnerPlayer()) }
+      case 2 => { Some(b2Player()) }
       case _ => {None}
     }
 
@@ -57,5 +58,6 @@ object ComputerPlayer {
 
   def randomPlayer() = new RandomPlayer()
   def beginnerPlayer() = new BeginnerPlayer()
+  def b2Player() = new B2Player()
 }
 

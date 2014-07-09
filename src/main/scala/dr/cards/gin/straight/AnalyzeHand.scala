@@ -52,4 +52,30 @@ object AnalyzeHand {
     val set = hand.filter( (c) => { c.rank == card.rank } )
     set.size == target
   }
+
+  def makesRun( hand : ListBuffer[Card], card : Card ) : Boolean = {
+    val remainder = deadwoodRunsFirst(hand)
+    val seqs = Seq.find(remainder)
+    seqs.exists( (s) => { s.improves(card) } )
+  }
+
+  def improvesRun( hand : ListBuffer[Card], card : Card ) : Boolean = {
+    val runs = Run.find(hand)
+    runs.exists( (r) => { r.improves(card) })
+  }
+
+  def deadwoodRunsFirst( cards : ListBuffer[Card] ) : ListBuffer[Card] = {
+    deadwood( cards, Run.find, Set.find)
+  }
+
+  def deadwoodSetsFirst( cards : ListBuffer[Card] ) : ListBuffer[Card] = {
+    deadwood( cards, Set.find, Run.find)
+  }
+
+  def deadwood[T <: Meld]( cards : ListBuffer[Card], f1 : (ListBuffer[Card]) => ListBuffer[T] , f2 :  (ListBuffer[Card]) => ListBuffer[T] ) : ListBuffer[Card] = {
+    val sets = f1( cards.clone)
+    val runs = f2( remainder( cards.clone, sets.toList ) )
+    val combined = runs.toList ++ sets.toList
+    remainder( cards.clone, combined )
+  }
 }

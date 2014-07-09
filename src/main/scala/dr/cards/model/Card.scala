@@ -131,6 +131,8 @@ object Card {
     }
   }
 
+  val rankOrdering = new RankOrdering()
+
   class SuitRankOrdering extends Ordering[Card] {
     def compare( a : Card, b : Card ) = {
       var s = a.suit.compare( b.suit )
@@ -141,4 +143,6 @@ object Card {
       s
     }
   }
+
+  val suitRankOrdering = new SuitRankOrdering()
 }

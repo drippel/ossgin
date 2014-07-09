@@ -6,6 +6,27 @@ import dr.cards.model.Hand
 import dr.cards.model.Deck
 
 class Seq( cs : ListBuffer[Card] ) extends Meld( cs ) {
+
+  override def improves( card : Card ) : Boolean = {
+
+    val sorted = cards.sorted( Card.suitRankOrdering )
+
+    if( card.suit != cards.head.suit ){
+      false
+    }
+    else {
+      if( card.rank == cards.head.rank - 1 ){
+        true
+      }
+      else if( card.rank == cards.last.rank + 1 ){
+        true
+      }
+      else {
+        false
+      }
+    }
+
+  }
 }
 
 object Seq {
@@ -21,7 +42,7 @@ object Seq {
 
   def findSeqLoop( cards : ListBuffer[Card], accum : ListBuffer[Meld] ) : ListBuffer[Meld] = {
 
-    if( cards.isEmpty || cards.size <= 2 ){
+    if( cards.isEmpty || cards.size <= 1 ){
       accum
     }
     else {
@@ -48,12 +69,8 @@ object Seq {
 
     var rest = cards.tail
 
-    while( !rest.isEmpty && isNext( possible.last, rest.head ) ){
+    if( !rest.isEmpty && isNext( possible.last, rest.head ) ){
       possible += rest.head
-      rest = rest.tail
-    }
-
-    if( possible.size == 2 ){
       Some( new Seq( possible.clone ) )
     }
     else {
