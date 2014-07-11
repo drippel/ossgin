@@ -10,16 +10,11 @@ class BeginnerPlayer( game : StraightGin, player : Player ) extends ComputerPlay
 
   override def choose() = {
 
-    val hand = GinPlay.otherHand(game).clone
+    val hand = game.currentHand(player)
 
-    // stock or take?
+    val card = game.currentDiscard
 
-    // lets look at the discard pile
-    val state = game.gameState.asInstanceOf[GinState]
-
-    val card = state.discards.top
-
-    // does this card make or complete a set?
+    // does the discard make or complete a set?
     if( makesSet( hand.cards, card ) || completesSet( hand.cards, card ) ){
        // should a beginner miss a play periodically?
       take()
@@ -32,7 +27,7 @@ class BeginnerPlayer( game : StraightGin, player : Player ) extends ComputerPlay
 
   override def discard() = {
 
-    val hand = GinPlay.currentHand(game)
+    val hand =  game.currentHand( player )
     val cards = hand.cards.clone
 
     //

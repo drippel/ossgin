@@ -4,6 +4,7 @@ import dr.cards.model.Game
 import dr.cards.model.Deck
 import dr.cards.model.Player
 import dr.cards.model.Card
+import dr.cards.model.Hand
 
 class StraightGin extends Game {
 
@@ -64,8 +65,22 @@ class StraightGin extends Game {
 
   }
 
+  def opponentDiscards( player : Player ) : List[Card] = {
+
+    val oppTakes = opponentStates(player).filter( (s) => {
+      s.play.isInstanceOf[Discard]
+    })
+
+    oppTakes.map( (s) => { s.card })
+
+  }
+
   def currentDiscard() : Card = {
     gameState().discards.top
+  }
+
+  def currentHand( player : Player ) : Hand = {
+    gameState().hands(player)
   }
 
 

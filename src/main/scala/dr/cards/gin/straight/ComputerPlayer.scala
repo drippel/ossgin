@@ -59,17 +59,17 @@ class ComputerPlayer( val game : StraightGin, val player : Player ) {
   }
 
   def take() = {
-      val t = new Take( game )
+      val t = new Take( game, player )
       t.execute
   }
 
   def stock() = {
-      val t = new Stock( game )
+      val t = new Stock( game, player )
       t.execute
   }
 
   def discard( i : Int ) = {
-    val d = new Discard(game,i)
+    val d = new Discard(game,player,i)
     d.execute
   }
 }

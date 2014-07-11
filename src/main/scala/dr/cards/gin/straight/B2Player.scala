@@ -11,14 +11,9 @@ class B2Player( game : StraightGin, player : Player ) extends ComputerPlayer( ga
 
   override def choose() = {
 
-    val hand = GinPlay.otherHand(game).clone
+    val hand = game.currentHand(player)
 
-    // stock or take?
-
-    // lets look at the discard pile
-    val state = game.gameState.asInstanceOf[GinState]
-
-    val card = state.discards.top
+    val card = game.currentDiscard
 
     // does this card make or complete a set?
     if( makesSet( hand.cards, card ) || completesSet( hand.cards, card ) ){
@@ -37,7 +32,7 @@ class B2Player( game : StraightGin, player : Player ) extends ComputerPlayer( ga
 
   override def discard() = {
 
-    val hand = GinPlay.currentHand(game)
+    val hand = game.currentHand(player)
     val cards = hand.cards.clone
 
     // find all the sets

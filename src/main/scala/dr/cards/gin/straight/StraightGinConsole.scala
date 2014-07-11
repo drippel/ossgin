@@ -79,7 +79,7 @@ object StraightGinConsole {
     override def execute() = {
       val setup = new Setup( game, me, you )
       setup.execute
-      val deal = new Deal( game )
+      val deal = new Deal( game, me )
       deal.execute()
       takeMenu()
     }
@@ -99,7 +99,7 @@ object StraightGinConsole {
 
   case class StockAction extends Action( "(S)tock", 'S' ) {
     override def execute() = {
-      val play = new Stock( game )
+      val play = new Stock( game, you )
       play.execute()
 
       // detect gin
@@ -116,7 +116,7 @@ object StraightGinConsole {
   case class TakeAction extends Action( "(T)ake", 'T' ) {
     override def execute() = {
 
-      val play = new Take( game )
+      val play = new Take( game, you )
       play.execute()
 
       // detect gin
@@ -147,7 +147,7 @@ object StraightGinConsole {
         Console.println("discard...")
 
         val i = cmd.tail.toInt
-        val d = new Discard( game, i - 1 )
+        val d = new Discard( game, you, i - 1 )
         d.execute
 
         // detect gin or game over

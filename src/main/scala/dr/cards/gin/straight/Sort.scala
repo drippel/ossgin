@@ -3,7 +3,7 @@ package dr.cards.gin.straight
 import dr.cards.model.Card
 import dr.cards.model.Player
 
-class Sort( game : StraightGin, player : Player, order : Ordering[Card] ) extends GinPlay( game ) {
+class Sort( game : StraightGin, player : Player, order : Ordering[Card] ) extends GinPlay( game, player ) {
 
  override def execute() = {
 

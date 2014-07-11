@@ -2,7 +2,7 @@ package dr.cards.gin.straight
 
 import dr.cards.model.Player
 
-class Swap( game : StraightGin, player : Player, a : Int, b : Int ) extends GinPlay( game ) {
+class Swap( game : StraightGin, player : Player, a : Int, b : Int ) extends GinPlay( game, player ) {
 
 
   override def execute() = {

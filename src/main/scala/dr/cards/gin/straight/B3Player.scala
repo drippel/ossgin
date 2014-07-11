@@ -12,14 +12,10 @@ class B3Player( game : StraightGin, player : Player ) extends ComputerPlayer( ga
 
   override def choose() = {
 
-    val hand = GinPlay.otherHand(game).clone
-
-    // stock or take?
+    val hand = game.currentHand(player)
 
     // lets look at the discard pile
-    val state = game.gameState.asInstanceOf[GinState]
-
-    val card = state.discards.top
+    val card = game.currentDiscard
 
     // does this card make or complete a set?
     if( makesSet( hand.cards, card ) || completesSet( hand.cards, card ) ){
@@ -38,7 +34,7 @@ class B3Player( game : StraightGin, player : Player ) extends ComputerPlayer( ga
 
   override def discard() = {
 
-    val hand = GinPlay.currentHand(game)
+    val hand = game.currentHand(player)
     val cards = hand.cards.clone
 
     // find all the sets
@@ -97,8 +93,7 @@ class B3Player( game : StraightGin, player : Player ) extends ComputerPlayer( ga
 
   def compareToTakes( game : StraightGin, cards : ListBuffer[Card] ) : ListBuffer[Card] = {
 
-    val state = game.gameState()
-    val opponentTakes = game.opponentTakes(state.player)
+    val opponentTakes = game.opponentTakes(player)
     val rememberedTakes = opponentTakes.take(2)
 
     // if any cards are of the same rank as a card in rememberedTakes

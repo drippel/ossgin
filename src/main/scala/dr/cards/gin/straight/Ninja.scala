@@ -13,7 +13,7 @@ class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game,
   override def choose() = {
 
     // the last play was by the opponent
-    val hand = GinPlay.otherHand( game ).clone
+    val hand = game.currentHand(player)
 
     val card = game.currentDiscard()
 
@@ -44,7 +44,7 @@ class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game,
 
   override def discard() = {
 
-    val hand = GinPlay.currentHand( game )
+    val hand = game.currentHand(player)
     val cards = hand.cards.clone
 
     // find all the sets
@@ -88,8 +88,8 @@ class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game,
           hand.cards.indexOf( flat( i ) )
         }
       }
-      val d = new Discard( game, pos )
-      d.execute
+
+      discard( pos )
     } else {
       // gin?
 
@@ -99,8 +99,7 @@ class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game,
 
   def compareToTakes( game : StraightGin, cards : ListBuffer[Card] ) : ListBuffer[Card] = {
 
-    val state = game.gameState()
-    val opponentTakes = game.opponentTakes( state.player )
+    val opponentTakes = game.opponentTakes( player )
     val rememberedTakes = opponentTakes.take( 2 )
 
     // if any cards are of the same rank as a card in rememberedTakes

@@ -5,7 +5,7 @@ import dr.cards.model.Player
 import dr.cards.model.Hand
 import scala.collection.mutable.HashMap
 
-class Deal( game : StraightGin ) extends GinPlay( game ) {
+class Deal( game : StraightGin, player : Player ) extends GinPlay( game, player ) {
 
   override def execute() = {
 
@@ -14,7 +14,7 @@ class Deal( game : StraightGin ) extends GinPlay( game ) {
     val deck = game.shuffle( game.newDeck )
 
     val dealer = nextState.player
-    val other = GinPlay.otherPlayer( nextState.hands, dealer )
+    val other = game.opponent( dealer )
 
     for( i <- 0 to 9 ){
       val c1 = deck.cards.remove(0)

@@ -2,15 +2,12 @@ package dr.cards.gin.straight
 
 import dr.cards.model.Play
 import dr.cards.model.Player
-import dr.cards.gin.straight.GinPlay._
 
-class Stock( game : StraightGin ) extends GinPlay( game ) {
+class Stock( game : StraightGin, player : Player ) extends GinPlay( game, player ) {
 
   override def execute() = {
 
     val nextState = setNextState()
-
-    switchPlayer( nextState )
 
     val player = nextState.player
 

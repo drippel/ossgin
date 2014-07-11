@@ -1,6 +1,8 @@
 package dr.cards.gin.straight
 
-class Discard( game : StraightGin, index : Int ) extends GinPlay( game ) {
+import dr.cards.model.Player
+
+class Discard( game : StraightGin, player : Player, index : Int ) extends GinPlay( game, player ) {
 
   override def execute() = {
 
