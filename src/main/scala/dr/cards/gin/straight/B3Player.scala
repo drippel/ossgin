@@ -99,7 +99,7 @@ class B3Player extends ComputerPlayer {
 
   def compareToTakes( game : StraightGin, cards : ListBuffer[Card] ) : ListBuffer[Card] = {
 
-    val state = game.currentState().asInstanceOf[GinState]
+    val state = game.gameState()
     val opponentTakes = game.opponentTakes(state.player)
     val rememberedTakes = opponentTakes.take(2)
 

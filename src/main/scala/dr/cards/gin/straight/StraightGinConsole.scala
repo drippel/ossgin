@@ -371,9 +371,7 @@ object StraightGinConsole {
     }
   }
 
-  def gameState() = {
-    game.currentState.asInstanceOf[GinState]
-  }
+  def gameState() = { game.gameState() }
 
   def stock() = {
     if ( !inProgress() ) {

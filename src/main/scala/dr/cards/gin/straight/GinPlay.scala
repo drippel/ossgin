@@ -9,7 +9,7 @@ class GinPlay( val game : StraightGin ) extends Play {
 
   def setNextState() = {
      // get the current state
-    val currentState = game.currentState.asInstanceOf[GinState]
+    val currentState = game.gameState()
     val nextState = currentState.clone
 
     currentState.next = nextState
@@ -33,17 +33,17 @@ object GinPlay {
   }
 
   def otherPlayer( game : StraightGin ) : Player = {
-    val state = game.currentState.asInstanceOf[GinState]
+    val state = game.gameState()
     otherPlayer( state.hands, state.player )
   }
 
   def otherHand( game : StraightGin ) : Hand = {
-    val s = game.currentState.asInstanceOf[GinState]
+    val s = game.gameState()
     s.hands(otherPlayer(game))
   }
 
   def currentHand( game : StraightGin ) : Hand = {
-    val s = game.currentState.asInstanceOf[GinState]
+    val s = game.gameState()
     s.hands(s.player)
   }
 }

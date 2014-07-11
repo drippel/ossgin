@@ -64,5 +64,9 @@ class StraightGin extends Game {
 
   }
 
+  def currentDiscard() : Card = {
+    gameState().discards.top
+  }
+
 
 }

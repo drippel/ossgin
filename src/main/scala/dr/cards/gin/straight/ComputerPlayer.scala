@@ -46,6 +46,26 @@ class ComputerPlayer {
     val i = random.nextInt(cards.size)
     cards(i)
   }
+
+  def gameStage( game : StraightGin ) : GameStage = {
+
+    val left = game.gameState().stock.size
+
+    if( left > 21 ){ Early() }
+    else if( left > 11 ) { Middle() }
+    else{ Late() }
+
+  }
+
+  def take( game : StraightGin ) = {
+      val t = new Take( game )
+      t.execute
+  }
+
+  def stock( game : StraightGin ) = {
+      val t = new Stock( game )
+      t.execute
+  }
 }
 
 
@@ -58,6 +78,7 @@ object ComputerPlayer {
       case 1 => { Some(beginnerPlayer()) }
       case 2 => { Some(b2Player()) }
       case 3 => { Some(b3Player()) }
+      case 10 => { Some(ninja()) }
       case _ => {None}
     }
 
@@ -67,5 +88,6 @@ object ComputerPlayer {
   def beginnerPlayer() = new BeginnerPlayer()
   def b2Player() = new B2Player()
   def b3Player() = new B3Player()
+  def ninja() = new Ninja()
 }
 
