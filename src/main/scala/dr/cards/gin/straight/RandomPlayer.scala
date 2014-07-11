@@ -1,27 +1,19 @@
 package dr.cards.gin.straight
 
 import java.util.Random
+import dr.cards.model.Player
 
-class RandomPlayer extends ComputerPlayer {
+class RandomPlayer( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 
   override def name = "Random"
   override def description = "Well.. random"
 
-  override def choose( game : StraightGin ) = {
+  override def choose() = {
 
     // stock or take?
-    val p = random.nextInt(2)
-    p match {
-      case 0 => {
-        // stock
-        val d = new Stock(game)
-        d.execute
-      }
-      case 1 => {
-        // take
-        val t = new Take(game)
-        t.execute
-      }
+    random.nextInt(2) match {
+      case 0 => { stock() }
+      case 1 => { take() }
       case _ => {
         // wtf
       }
@@ -29,12 +21,6 @@ class RandomPlayer extends ComputerPlayer {
 
   }
 
-
-  override def discard(game : StraightGin ) = {
-
-    val i = random.nextInt(11)
-    val d = new Discard(game,i)
-    d.execute
-  }
+  override def discard() = { discard( random.nextInt(11) ) }
 
 }

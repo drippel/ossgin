@@ -8,16 +8,16 @@ class StraightGinConsole( val game : StraightGin ) {
 
 object StraightGinConsole {
 
-  var game : StraightGin = null
+  var game : StraightGin = new StraightGin()
   val me = new Player( "Me" )
   val you = new Player( "You" )
 
-  val ginConsole = new StraightGinConsole( new StraightGin() )
+  val ginConsole = new StraightGinConsole( game )
 
   var cheatsOn = false
   var hintsOn = false
 
-  var playerStrategy : ComputerPlayer = ComputerPlayer.randomPlayer()
+  var playerStrategy : ComputerPlayer = ComputerPlayer.computerPlayer( 0, ginConsole.game, me ).get
 
   var msg : Option[String] = null
 
@@ -77,12 +77,10 @@ object StraightGinConsole {
 
   case class NewGameAction extends Action( "(N)ew", 'N' ) {
     override def execute() = {
-      game = new StraightGin()
       val setup = new Setup( game, me, you )
       setup.execute
       val deal = new Deal( game )
       deal.execute()
-
       takeMenu()
     }
   }
@@ -159,7 +157,7 @@ object StraightGinConsole {
         } else {
 
           // computer player
-          playerStrategy.choose( game )
+          playerStrategy.choose()
 
           // message for what the player took
 
@@ -169,7 +167,7 @@ object StraightGinConsole {
             newGameMenu()
           } else {
 
-            playerStrategy.discard( game )
+            playerStrategy.discard()
 
             // detect gin or game over
             if ( game.isRoundOver ) {
@@ -261,7 +259,7 @@ object StraightGinConsole {
       if ( num.size > 0 ) {
         try {
           val i = num.toInt
-          ComputerPlayer.computerPlayer(i) match {
+          ComputerPlayer.computerPlayer( i, game, me ) match {
             case Some(p) => {
               playerStrategy = p
               setMessage("Switched player to " + playerStrategy.name )
@@ -337,7 +335,7 @@ object StraightGinConsole {
   }
 
   def inProgress() : Boolean = {
-    game != null
+    game != null && game.inProgress()
   }
 
   def player1() = {

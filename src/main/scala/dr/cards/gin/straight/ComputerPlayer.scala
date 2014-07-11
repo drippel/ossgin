@@ -2,6 +2,7 @@ package dr.cards.gin.straight
 
 import java.util.Random
 import dr.cards.model.Card
+import dr.cards.model.Player
 
 /*
  * Should players make mistakes or miss plays at random?
@@ -25,7 +26,7 @@ import dr.cards.model.Card
  * Expert
  *   10 perfect memory on takes/discards, no mistakes
  */
-class ComputerPlayer {
+class ComputerPlayer( val game : StraightGin, val player : Player ) {
 
   def name() : String = ""
   def description() : String = ""
@@ -35,19 +36,19 @@ class ComputerPlayer {
 
   def evaluate() = {}
 
-  def play( game : StraightGin ) = {
-    choose(game)
-    discard(game)
+  def play() = {
+    choose()
+    discard()
   }
-  def choose( game : StraightGin ) = {}
-  def discard( game : StraightGin ) = {}
+  def choose() = {}
+  def discard() = {}
 
   def getRandom( cards : List[Card] ) : Card = {
     val i = random.nextInt(cards.size)
     cards(i)
   }
 
-  def gameStage( game : StraightGin ) : GameStage = {
+  def gameStage() : GameStage = {
 
     val left = game.gameState().stock.size
 
@@ -57,37 +58,37 @@ class ComputerPlayer {
 
   }
 
-  def take( game : StraightGin ) = {
+  def take() = {
       val t = new Take( game )
       t.execute
   }
 
-  def stock( game : StraightGin ) = {
+  def stock() = {
       val t = new Stock( game )
       t.execute
+  }
+
+  def discard( i : Int ) = {
+    val d = new Discard(game,i)
+    d.execute
   }
 }
 
 
 object ComputerPlayer {
 
-  def computerPlayer( level : Int ) : Option[ComputerPlayer] = {
+  def computerPlayer( level : Int, game : StraightGin, player : Player ) : Option[ComputerPlayer] = {
 
     level match {
-      case 0 => { Some(randomPlayer()) }
-      case 1 => { Some(beginnerPlayer()) }
-      case 2 => { Some(b2Player()) }
-      case 3 => { Some(b3Player()) }
-      case 10 => { Some(ninja()) }
+      case 0 => { Some( new RandomPlayer( game, player )) }
+      case 1 => { Some( new BeginnerPlayer( game, player )) }
+      case 2 => { Some( new B2Player( game, player )) }
+      case 3 => { Some( new B3Player( game, player )) }
+      case 10 => { Some( new Ninja( game, player )) }
       case _ => {None}
     }
 
   }
 
-  def randomPlayer() = new RandomPlayer()
-  def beginnerPlayer() = new BeginnerPlayer()
-  def b2Player() = new B2Player()
-  def b3Player() = new B3Player()
-  def ninja() = new Ninja()
 }
 

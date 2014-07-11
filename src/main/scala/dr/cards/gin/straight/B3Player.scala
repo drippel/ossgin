@@ -3,13 +3,14 @@ package dr.cards.gin.straight
 import AnalyzeHand._
 import dr.cards.model.Card
 import scala.collection.mutable.ListBuffer
+import dr.cards.model.Player
 
-class B3Player extends ComputerPlayer {
+class B3Player( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 
   override def name = "Beginner 3"
   override def description = "A little better, remembers somethings."
 
-  override def choose( game : StraightGin ) = {
+  override def choose() = {
 
     val hand = GinPlay.otherHand(game).clone
 
@@ -23,22 +24,19 @@ class B3Player extends ComputerPlayer {
     // does this card make or complete a set?
     if( makesSet( hand.cards, card ) || completesSet( hand.cards, card ) ){
       // should a beginner miss a play periodically?
-      val t =  new Take(game)
-      t.execute
+      take()
     }
     else if( makesRun( hand.cards, card ) || improvesRun( hand.cards, card ) ){
       // should a beginner miss a play periodically?
-      val t =  new Take(game)
-      t.execute
+      take()
     }
     else {
-      val s = new Stock( game )
-      s.execute()
+      stock()
     }
   }
 
 
-  override def discard(game : StraightGin ) = {
+  override def discard() = {
 
     val hand = GinPlay.currentHand(game)
     val cards = hand.cards.clone
@@ -87,8 +85,8 @@ class B3Player extends ComputerPlayer {
           hand.cards.indexOf(flat(i))
         }
       }
-      val d = new Discard(game,pos)
-      d.execute
+
+      discard(pos)
     }
     else {
       // gin?

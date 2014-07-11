@@ -19,4 +19,8 @@ class Game {
   def currentRound() = {
     matches.last.rounds.last
   }
+
+  def inProgress() : Boolean = {
+    !matches.isEmpty && !matches.last.rounds.isEmpty && matches.last.rounds.last.beginState != null
+  }
 }

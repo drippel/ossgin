@@ -3,13 +3,14 @@ package dr.cards.gin.straight
 import AnalyzeHand._
 import dr.cards.model.Card
 import scala.collection.mutable.ListBuffer
+import dr.cards.model.Player
 
-class Ninja extends ComputerPlayer {
+class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 
   override def name = "Ninja"
   override def description = "Ninja"
 
-  override def choose( game : StraightGin ) = {
+  override def choose() = {
 
     // the last play was by the opponent
     val hand = GinPlay.otherHand( game ).clone
@@ -29,19 +30,19 @@ class Ninja extends ComputerPlayer {
     hand.cards += card
 
     if( detectGin( hand ) ) {
-      take( game )
+      take()
     }
     else {
       if( deadwoodRunsFirst( hand.cards ).size <= 3 ){
-        take( game )
+        take()
       }
       else {
-        stock( game )
+        stock()
       }
     }
   }
 
-  override def discard( game : StraightGin ) = {
+  override def discard() = {
 
     val hand = GinPlay.currentHand( game )
     val cards = hand.cards.clone
