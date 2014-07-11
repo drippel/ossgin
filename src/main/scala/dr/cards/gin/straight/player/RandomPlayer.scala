@@ -1,7 +1,6 @@
-package dr.cards.gin.straight
-
-import java.util.Random
+package dr.cards.gin.straight.player
 import dr.cards.model.Player
+import dr.cards.gin.straight.StraightGin
 
 class RandomPlayer( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 

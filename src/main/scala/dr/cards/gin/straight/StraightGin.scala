@@ -5,6 +5,9 @@ import dr.cards.model.Deck
 import dr.cards.model.Player
 import dr.cards.model.Card
 import dr.cards.model.Hand
+import dr.cards.gin.straight.play.Take
+import dr.cards.gin.straight.play.Discard
+import dr.cards.gin.straight.play.GinPlay
 
 class StraightGin extends Game {
 

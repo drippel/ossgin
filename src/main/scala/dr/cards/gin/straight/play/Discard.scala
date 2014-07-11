@@ -1,6 +1,7 @@
-package dr.cards.gin.straight
+package dr.cards.gin.straight.play
 
 import dr.cards.model.Player
+import dr.cards.gin.straight.StraightGin
 
 class Discard( game : StraightGin, player : Player, index : Int ) extends GinPlay( game, player ) {
 

@@ -127,7 +127,7 @@
                             <finalName>sgin</finalName>
                             <archive>
                                 <manifest>
-                                    <mainClass>dr.cards.gin.straight.StraightGinConsole</mainClass>
+                                    <mainClass>dr.cards.gin.straight.ui.StraightGinConsole</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

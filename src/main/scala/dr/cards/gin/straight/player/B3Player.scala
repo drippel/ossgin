@@ -1,9 +1,14 @@
-package dr.cards.gin.straight
+package dr.cards.gin.straight.player
 
-import AnalyzeHand._
 import dr.cards.model.Card
 import scala.collection.mutable.ListBuffer
 import dr.cards.model.Player
+import dr.cards.gin.straight.Run
+import dr.cards.gin.straight.Pair
+import dr.cards.gin.straight.Seq
+import dr.cards.gin.straight.Set
+import dr.cards.gin.straight.StraightGin
+import dr.cards.gin.straight.AnalyzeHand._
 
 class B3Player( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 

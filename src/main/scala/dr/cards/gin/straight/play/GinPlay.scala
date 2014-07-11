@@ -1,9 +1,8 @@
-package dr.cards.gin.straight
+package dr.cards.gin.straight.play
 
 import dr.cards.model.Play
-import scala.collection.mutable.HashMap
 import dr.cards.model.Player
-import dr.cards.model.Hand
+import dr.cards.gin.straight.StraightGin
 
 class GinPlay( val game : StraightGin, val player : Player ) extends Play {
 

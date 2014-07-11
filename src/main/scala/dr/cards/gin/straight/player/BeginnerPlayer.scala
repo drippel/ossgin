@@ -1,6 +1,9 @@
-package dr.cards.gin.straight
+package dr.cards.gin.straight.player
 
-import AnalyzeHand._
+import dr.cards.gin.straight.AnalyzeHand._
+import dr.cards.gin.straight.Pair
+import dr.cards.gin.straight.Set
+import dr.cards.gin.straight.StraightGin
 import dr.cards.model.Player
 
 class BeginnerPlayer( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {

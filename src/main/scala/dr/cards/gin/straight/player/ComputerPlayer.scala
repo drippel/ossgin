@@ -1,8 +1,16 @@
-package dr.cards.gin.straight
+package dr.cards.gin.straight.player
 
 import java.util.Random
 import dr.cards.model.Card
+import dr.cards.gin.straight.play.Discard
+import dr.cards.gin.straight.GameStage
+import dr.cards.gin.straight.play.Stock
+import dr.cards.gin.straight.StraightGin
+import dr.cards.gin.straight.play.Take
 import dr.cards.model.Player
+import dr.cards.gin.straight.Early
+import dr.cards.gin.straight.Middle
+import dr.cards.gin.straight.Late
 
 /*
  * Should players make mistakes or miss plays at random?

@@ -1,7 +1,16 @@
-package dr.cards.gin.straight
+package dr.cards.gin.straight.ui
 
 import dr.cards.model.Player
 import dr.cards.model.Card
+import dr.cards.gin.straight.player.ComputerPlayer
+import dr.cards.gin.straight.play.Deal
+import dr.cards.gin.straight.play.Discard
+import dr.cards.gin.straight.play.Setup
+import dr.cards.gin.straight.play.Sort
+import dr.cards.gin.straight.play.Stock
+import dr.cards.gin.straight.StraightGin
+import dr.cards.gin.straight.play.Swap
+import dr.cards.gin.straight.play.Take
 
 class StraightGinConsole( val game : StraightGin ) {
 }

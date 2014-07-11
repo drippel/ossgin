@@ -1,10 +1,12 @@
-package dr.cards.gin.straight
+package dr.cards.gin.straight.play
 
 import dr.cards.model.Play
 import dr.cards.model.Player
 import dr.cards.model.Match
 import dr.cards.model.Round
 import dr.cards.model.Hand
+import dr.cards.gin.straight.GinState
+import dr.cards.gin.straight.StraightGin
 
 class Setup( game : StraightGin, p1 : Player, p2 : Player ) extends Play {
 
