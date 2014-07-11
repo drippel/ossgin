@@ -14,9 +14,9 @@ class Take( game : StraightGin ) extends GinPlay( game ) {
 
     val player = nextState.player
 
-    val c = nextState.discards.pop
+    nextState.card = nextState.discards.pop
 
-    nextState.hands(player).cards += c
+    nextState.hands(player).cards += nextState.card
 
   }
 }

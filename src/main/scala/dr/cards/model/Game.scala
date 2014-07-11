@@ -13,8 +13,10 @@ class Game {
   }
 
   def currentState() = {
-
     matches.last.rounds.last.currentState
+  }
 
+  def currentRound() = {
+    matches.last.rounds.last
   }
 }

@@ -14,9 +14,9 @@ class Stock( game : StraightGin ) extends GinPlay( game ) {
 
     val player = nextState.player
 
-    val c = nextState.stock.remove(0)
+    nextState.card = nextState.stock.remove(0)
 
-    nextState.hands(player).cards += c
+    nextState.hands(player).cards += nextState.card
 
   }
 }

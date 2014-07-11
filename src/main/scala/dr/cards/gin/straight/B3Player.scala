@@ -2,11 +2,12 @@ package dr.cards.gin.straight
 
 import AnalyzeHand._
 import dr.cards.model.Card
+import scala.collection.mutable.ListBuffer
 
-class B2Player extends ComputerPlayer {
+class B3Player extends ComputerPlayer {
 
-  override def name = "Beginner 2"
-  override def description = "If you can't beat this guy..."
+  override def name = "Beginner 3"
+  override def description = "A little better, remembers somethings."
 
   override def choose( game : StraightGin ) = {
 
@@ -59,8 +60,16 @@ class B2Player extends ComputerPlayer {
       val afterSeq = remainder( afterPairs, ( pairs.toList ++ seqs ) )
 
       val pos = if( !afterSeq.isEmpty ){
-        // we have cards left that is not in a pair and seq
-        hand.cards.indexOf( getRandom( afterSeq.toList ) )
+
+        // dont discard something that is close to the opponents takes
+        val afterCompare = compareToTakes( game, afterSeq )
+        if( afterCompare.isEmpty ) {
+          hand.cards.indexOf( getRandom( afterCompare.toList ) )
+        }
+        else {
+          // we have cards left that is not in a pair and seq
+          hand.cards.indexOf( getRandom( afterSeq.toList ) )
+        }
       }
       else {
         // all the remaining cards are in seqs or pairs
@@ -87,5 +96,23 @@ class B2Player extends ComputerPlayer {
     }
 
   }
+
+  def compareToTakes( game : StraightGin, cards : ListBuffer[Card] ) : ListBuffer[Card] = {
+
+    val state = game.currentState().asInstanceOf[GinState]
+    val opponentTakes = game.opponentTakes(state.player)
+    val rememberedTakes = opponentTakes.take(2)
+
+    // if any cards are of the same rank as a card in rememberedTakes
+    // remove from the list
+
+    for( c <- cards ;
+         if( !rememberedTakes.exists( (r) => { c.rank == r.rank } ) )
+       ) yield c
+
+  }
+
+
+
 
 }

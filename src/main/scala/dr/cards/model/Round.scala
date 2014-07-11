@@ -9,18 +9,26 @@ class Round {
 
   def currentState() = {
     var cs = beginState
-
-    var found = false
-    while( !found ){
-      if( cs.next == null ){
-        found = true
-      }
-      else {
-        cs = cs.next
-      }
+    while( cs.next != null ){
+      cs = cs.next
     }
 
     cs
+  }
+
+  def states() : List[State] = {
+
+    val buf = ListBuffer[State]()
+
+    var end = false
+    var cs = beginState
+    while( cs.next != null ){
+      buf += cs
+      cs = cs.next
+    }
+
+    buf.toList
+
   }
 
 }

@@ -11,9 +11,9 @@ class Discard( game : StraightGin, index : Int ) extends GinPlay( game ) {
     val player = nextState.player
     val hand   = nextState.hands(player)
 
-    val c = hand.cards.remove(index)
+    nextState.card = hand.cards.remove(index)
 
-    nextState.discards.push(c)
+    nextState.discards.push(nextState.card)
 
   }
 

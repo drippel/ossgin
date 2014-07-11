@@ -15,6 +15,7 @@ class GinState extends State {
   val hands = HashMap[Player,Hand]()
   var discards = Stack[Card]()
   val stock = ListBuffer[Card]()
+  var card : Card = null
 
   override def clone() = {
 
