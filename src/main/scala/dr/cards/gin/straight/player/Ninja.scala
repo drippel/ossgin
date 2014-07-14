@@ -5,6 +5,8 @@ import dr.cards.model.Player
 import dr.cards.gin.straight.StraightGin
 import dr.cards.gin.straight.Run
 import dr.cards.gin.straight.Set
+import dr.cards.gin.straight.RunFinder
+import dr.cards.gin.straight.SetFinder
 
 class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 
@@ -58,10 +60,10 @@ class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game,
     val cards = game.currentHand(player).cards.clone
 
     // TODO: this will not break off cards from a long run to make a set
-    val runs = Run.find( cards )
-    val sets = Set.find( remainder( cards, runs.toList ) )
+    val runs = RunFinder.find( cards.toList )
+    val sets = SetFinder.find( remainder( cards.toList, runs.toList ) )
 
-    val left = remainder( cards, ( runs.toList ++ sets.toList ) )
+    val left = remainder( cards.toList, ( runs.toList ++ sets.toList ) )
 
     //
     if( !left.isEmpty ){

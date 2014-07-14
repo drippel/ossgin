@@ -5,6 +5,8 @@ import dr.cards.gin.straight.Pair
 import dr.cards.gin.straight.Set
 import dr.cards.gin.straight.StraightGin
 import dr.cards.model.Player
+import dr.cards.gin.straight.SetFinder
+import dr.cards.gin.straight.PairFinder
 
 class BeginnerPlayer( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 
@@ -34,14 +36,14 @@ class BeginnerPlayer( game : StraightGin, player : Player ) extends ComputerPlay
     val cards = hand.cards.clone
 
     //
-    val sets = Set.find(cards)
-    val left = remainder( cards, sets.toList )
+    val sets = SetFinder.find(cards.toList)
+    val left = remainder( cards.toList, sets.toList )
 
     // gin should have already been detected but...
     if( !left.isEmpty ) {
 
       // dont discard a pair
-      val pairs = Pair.find(left)
+      val pairs = PairFinder.find(left)
       val afterPairs = remainder( left, pairs.toList )
       val pos = if( !afterPairs.isEmpty ){
         val i = random.nextInt(afterPairs.size)

@@ -16,28 +16,28 @@ object AnalyzeHand {
   }
 
   def runsThenSets( hand : Hand ) : Boolean = {
-    detectGin( hand, Run.find, Set.find )
+    detectGin( hand, RunFinder.find, SetFinder.find )
   }
 
   def setsThenRuns( hand : Hand ) : Boolean = {
-    detectGin( hand, Set.find, Run.find )
+    detectGin( hand, SetFinder.find, RunFinder.find )
   }
 
-  def detectGin[T <: Meld]( hand : Hand, f1 : (ListBuffer[Card]) => ListBuffer[T] , f2 :  (ListBuffer[Card]) => ListBuffer[T] ) : Boolean = {
+  def detectGin[T <: Meld]( hand : Hand, f1 : (List[Card]) => List[T] , f2 :  (List[Card]) => List[T] ) : Boolean = {
 
-    val sets = f1( hand.cards.clone)
+    val sets = f1( hand.cards.toList )
 
-    val runs = f2( remainder( hand.cards.clone, sets.toList ) )
+    val runs = f2( remainder( hand.cards.toList, sets ) )
     val combined = runs.toList ++ sets.toList
-    val runsRemainder = remainder( hand.cards.clone, combined )
+    val runsRemainder = remainder( hand.cards.toList, combined )
 
     runsRemainder.isEmpty || runsRemainder.size == 1
 
   }
 
-  def remainder( hand : ListBuffer[Card], melds : List[Meld] ) : ListBuffer[Card] = {
+  def remainder( hand : List[Card], melds : List[Meld] ) : List[Card] = {
     val flat = CardContainer.flatten(melds)
-    hand.diff( flat )
+    hand.diff( flat ).toList
   }
 
   def makesSet( hand : ListBuffer[Card], card : Card ) : Boolean = {
@@ -55,27 +55,27 @@ object AnalyzeHand {
 
   def makesRun( hand : ListBuffer[Card], card : Card ) : Boolean = {
     val remainder = deadwoodRunsFirst(hand)
-    val seqs = Seq.find(remainder)
+    val seqs = SeqFinder.find(remainder)
     seqs.exists( (s) => { s.improves(card) } )
   }
 
   def improvesRun( hand : ListBuffer[Card], card : Card ) : Boolean = {
-    val runs = Run.find(hand)
+    val runs = RunFinder.find(hand.toList)
     runs.exists( (r) => { r.improves(card) })
   }
 
-  def deadwoodRunsFirst( cards : ListBuffer[Card] ) : ListBuffer[Card] = {
-    deadwood( cards, Run.find, Set.find)
+  def deadwoodRunsFirst( cards : ListBuffer[Card] ) : List[Card] = {
+    deadwood( cards, RunFinder.find, SetFinder.find)
   }
 
-  def deadwoodSetsFirst( cards : ListBuffer[Card] ) : ListBuffer[Card] = {
-    deadwood( cards, Set.find, Run.find)
+  def deadwoodSetsFirst( cards : ListBuffer[Card] ) : List[Card] = {
+    deadwood( cards, SetFinder.find, RunFinder.find)
   }
 
-  def deadwood[T <: Meld]( cards : ListBuffer[Card], f1 : (ListBuffer[Card]) => ListBuffer[T] , f2 :  (ListBuffer[Card]) => ListBuffer[T] ) : ListBuffer[Card] = {
-    val sets = f1( cards.clone)
-    val runs = f2( remainder( cards.clone, sets.toList ) )
+  def deadwood[T <: Meld]( cards : ListBuffer[Card], f1 : (List[Card]) => List[T] , f2 :  (List[Card]) => List[T] ) : List[Card] = {
+    val sets = f1( cards.toList)
+    val runs = f2( remainder( cards.toList, sets.toList ) )
     val combined = runs.toList ++ sets.toList
-    remainder( cards.clone, combined )
+    remainder( cards.toList, combined )
   }
 }

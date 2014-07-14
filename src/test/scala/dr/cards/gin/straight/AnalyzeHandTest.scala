@@ -96,9 +96,9 @@ class AnalyzeHandTest {
 
     h.cards += Card.stringToCard( "S9" )
 
-    val sets = Set.find( h.cards.clone )
+    val sets = SetFinder.find( h.cards.toList )
 
-    val remainder = AnalyzeHand.remainder( h.cards.clone, sets.toList )
+    val remainder = AnalyzeHand.remainder( h.cards.toList, sets )
 
     assertTrue( remainder.size == 1 )
     assertTrue( remainder.contains( Card.stringToCard( "S9" ) ) )

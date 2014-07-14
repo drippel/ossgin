@@ -7,6 +7,10 @@ import dr.cards.gin.straight.Pair
 import dr.cards.gin.straight.Seq
 import dr.cards.gin.straight.Set
 import dr.cards.gin.straight.StraightGin
+import dr.cards.gin.straight.SetFinder
+import dr.cards.gin.straight.RunFinder
+import dr.cards.gin.straight.PairFinder
+import dr.cards.gin.straight.SeqFinder
 
 class B2Player( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 
@@ -40,19 +44,17 @@ class B2Player( game : StraightGin, player : Player ) extends ComputerPlayer( ga
     val cards = hand.cards.clone
 
     // find all the sets
-    val sets = Set.find(cards)
-    remainder( cards, sets.toList )
-
-    val runs = Run.find(cards)
-    val left = remainder( cards, ( runs.toList ++ sets.toList ) )
+    val sets = SetFinder.find(cards.toList)
+    val runs = RunFinder.find(cards.toList)
+    val left = remainder( cards.toList, ( runs.toList ++ sets.toList ) )
 
     // gin should have already been detected but...
     if( !left.isEmpty ) {
 
       // try not to discard a pair and a seq
-      val pairs = Pair.find(left)
+      val pairs = PairFinder.find(left)
       val afterPairs = remainder( left, pairs.toList )
-      val seqs = Seq.find( afterPairs )
+      val seqs = SeqFinder.find( afterPairs )
       val afterSeq = remainder( afterPairs, ( pairs.toList ++ seqs ) )
 
       val pos = if( !afterSeq.isEmpty ){

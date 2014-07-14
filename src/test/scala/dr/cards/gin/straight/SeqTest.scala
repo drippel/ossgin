@@ -31,7 +31,7 @@ class SeqTest {
 
     assertFalse( deadwood.isEmpty )
 
-    val seqs = Seq.find( deadwood )
+    val seqs = SeqFinder.find( deadwood )
 
     assertFalse( seqs.isEmpty )
 
