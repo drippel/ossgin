@@ -145,4 +145,8 @@ object Card {
   }
 
   val suitRankOrdering = new SuitRankOrdering()
+
+  implicit def toCard( s : String ) : Card = {
+      Card.stringToCard( s )
+  }
 }
