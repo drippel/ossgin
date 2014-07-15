@@ -7,6 +7,11 @@ import dr.cards.gin.straight.Run
 import dr.cards.gin.straight.Set
 import dr.cards.gin.straight.RunFinder
 import dr.cards.gin.straight.SetFinder
+import dr.cards.model.Card
+import scala.collection.mutable.HashMap
+import dr.cards.gin.straight.PairFinder
+import dr.cards.gin.straight.SeqFinder
+import dr.cards.gin.straight.TriangleFinder
 
 class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game, player ) {
 
@@ -16,7 +21,7 @@ class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game,
   override def choose() = {
 
     // the last play was by the opponent
-    val hand = game.currentHand(player)
+    val hand = game.currentHand(player).clone
 
     val card = game.currentDiscard()
 
@@ -47,6 +52,8 @@ class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game,
 
   override def discard() = {
 
+    // step 1 collect information
+
     val takes = game.opponentTakes(player)
     val discards = game.opponentDiscards(player)
 
@@ -63,20 +70,68 @@ class Ninja( game : StraightGin, player : Player ) extends ComputerPlayer( game,
     val runs = RunFinder.find( cards.toList )
     val sets = SetFinder.find( remainder( cards.toList, runs.toList ) )
 
-    val left = remainder( cards.toList, ( runs.toList ++ sets.toList ) )
+    val deadwood = remainder( cards.toList, ( runs.toList ++ sets.toList ) )
 
     //
-    if( !left.isEmpty ){
+    if( !deadwood.isEmpty ){
+
+      // lets create a map of cards and weights
+      val weights = HashMap[Card,Int]()
+      for( c <- deadwood ){
+        weights.put( c, 0 )
+      }
+
+      // if the card is in a pair, seq, or triangle
+      val pairs = PairFinder.find(deadwood).flatten( (p) => { p.cards } )
+      adjustWeights( weights, pairs, 10 )
+
+      val seq = SeqFinder.find(deadwood).flatten( (p) => { p.cards } )
+      adjustWeights( weights, pairs, 15 )
+
+      val tri = TriangleFinder.find(deadwood).flatten( (p) => { p.cards } )
+      adjustWeights( weights, pairs, 10 )
+
+      // if the card is near one of the cards in the players hand
+      for( d <- deadwood ){
+        if( inHand.exists( (s) => { isNear( d, s ) } )){
+            val cur = weights(d)
+            weights.put(d, ( cur + 20 ) )
+        }
+      }
 
       //
+      val s = weights.values.toList.sorted.head
+      val possibles = weights.filter( (p) => { p._2 == 2 } ).keySet.toList
+
+      val card = getRandom( possibles )
+
+      discard( game.currentHand(player).cards.indexOf( card ) )
 
     }
     else {
       // gin?
     }
 
+  }
 
+  def adjustWeights( weights : HashMap[Card,Int], cards : List[Card], adj : Int ) = {
+    for( c <- cards ){
+      val cur = weights(c)
+      weights.put(c, ( cur + adj ) )
+    }
+  }
 
+  def isNear( src : Card, trgt : Card ) : Boolean = {
+    if( src.rank == trgt.rank ){
+      true
+    }
+    else if( src.suit == trgt.suit ) {
+      val diff = src.rank - trgt.rank
+      diff.abs <= 2
+    }
+    else {
+      false
+    }
   }
 
 

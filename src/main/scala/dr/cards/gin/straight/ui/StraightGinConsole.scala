@@ -153,7 +153,7 @@ object StraightGinConsole {
     override def execute() = {
       try {
 
-        Console.println("discard...")
+        // Console.println("discard...")
 
         val i = cmd.tail.toInt
         val d = new Discard( game, you, i - 1 )
