@@ -34,7 +34,7 @@ import dr.cards.gin.straight.Late
  * Expert
  *   10 perfect memory on takes/discards, no mistakes
  */
-class ComputerPlayer( val game : StraightGin, val player : Player ) {
+abstract class ComputerPlayer( val game : StraightGin, val player : Player ) {
 
   def name() : String = ""
   def description() : String = ""
@@ -42,14 +42,25 @@ class ComputerPlayer( val game : StraightGin, val player : Player ) {
   // random will come into play eventually for all skill levels
   val random = new Random()
 
-  def evaluate() = {}
-
   def play() = {
     choose()
     discard()
   }
-  def choose() = {}
-  def discard() = {}
+
+  var chooseStrategy :  ( StraightGin, Player ) => Int
+  var discardStrategy :  ( StraightGin, Player ) => Int
+
+  def choose() : Unit = {
+
+    // stock or take?
+    chooseStrategy( game, player ) match {
+      case 0 => { stock() }
+      case 1 => { take() }
+    }
+
+  }
+
+  def discard() : Unit = { discard( discardStrategy( game, player ) ) }
 
   def getRandom( cards : List[Card] ) : Card = {
     val i = random.nextInt(cards.size)
