@@ -28,7 +28,12 @@ object LanternaTest {
       val myWindow = new MyWindow();
       gui.showWindow( myWindow, GUIScreen.Position.CENTER );
 
+      try{
       Thread.sleep( 5000 )
+      }
+      catch {
+        case _ : Throwable => {}
+      }
 
       //Do GUI logic here
 
