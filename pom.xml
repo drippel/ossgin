@@ -117,6 +117,24 @@
                             <goal>single</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>bt</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>bt</finalName>
+                            <archive>
+                                <manifest>
+                                    <mainClass>dr.cards.gin.straight.ui.ButtonTest</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
 
