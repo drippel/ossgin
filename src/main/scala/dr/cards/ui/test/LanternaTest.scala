@@ -1,13 +1,14 @@
 package dr.cards.ui.test
 
-import com.googlecode.lanterna.TerminalFacade
 import java.nio.charset.Charset
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.terminal.Terminal
 import com.googlecode.lanterna.terminal.swing.SwingTerminal
-import com.googlecode.lanterna.terminal.text.CygwinTerminal
 import com.googlecode.lanterna.gui.Window
 import com.googlecode.lanterna.gui.GUIScreen
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory
+import com.googlecode.lanterna.screen.DefaultScreen
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame
 
 class LanternaTest {
 
@@ -16,17 +17,17 @@ class LanternaTest {
 object LanternaTest {
 
   def main( args : Array[String] ) = {
-    val terminal = TerminalFacade.createTerminal( System.in, System.out, Charset.forName( "UTF8" ) );
-    // val screen = new Screen(terminal);
-    // val screen = TerminalFacade.createScreen(new SwingTerminal());
-    val screen = TerminalFacade.createScreen( TerminalFacade.createCygwinTerminal() );
 
-    val gui = TerminalFacade.createGUIScreen( screen );
-    if ( gui != null ) {
-      gui.getScreen().startScreen();
-      gui.setTitle( "GUI Test" );
+    val factory = new DefaultTerminalFactory();
+    val terminal = factory.createTerminal().asInstanceOf[SwingTerminalFrame]
+    val screen = new DefaultScreen( terminal )
+    val guiScreen = new GUIScreen(screen)
+
+      screen.startScreen();
+
       val myWindow = new MyWindow();
-      gui.showWindow( myWindow, GUIScreen.Position.CENTER );
+
+      guiScreen.showWindow( myWindow, GUIScreen.Position.CENTER );
 
       try{
       Thread.sleep( 5000 )
@@ -39,11 +40,10 @@ object LanternaTest {
 
       myWindow.close()
 
-      gui.getScreen().clear()
-      gui.getScreen().stopScreen();
+      guiScreen.getScreen().clear()
+      guiScreen.getScreen().stopScreen();
 
       terminal.clearScreen()
-    }
 
   }
 

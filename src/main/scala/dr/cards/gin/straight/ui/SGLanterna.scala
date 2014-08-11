@@ -1,6 +1,5 @@
 package dr.cards.gin.straight.ui
 
-import com.googlecode.lanterna.TerminalFacade
 import com.googlecode.lanterna.gui.Window
 import com.googlecode.lanterna.gui.Border
 import com.googlecode.lanterna.gui.component.EmptySpace
@@ -18,7 +17,6 @@ import dr.cards.gin.straight.player.ComputerPlayer
 import com.googlecode.lanterna.terminal.swing.SwingTerminal
 import scala.collection.mutable.ListBuffer
 import com.googlecode.lanterna.gui.component.TextArea
-import com.googlecode.lanterna.terminal.TerminalSize
 import com.googlecode.lanterna.gui.component.EditArea
 import dr.cards.gin.straight.play.Setup
 import dr.cards.gin.straight.play.Deal
@@ -26,6 +24,14 @@ import dr.cards.model.Card
 import dr.cards.gin.straight.play.Sort
 import dr.cards.gin.straight.play.Take
 import dr.cards.gin.straight.play.Discard
+import dr.cards.gin.straight.play.Stock
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame
+import com.googlecode.lanterna.screen.DefaultScreen
+import com.googlecode.lanterna.TerminalSize
+import javax.swing.JFrame
+
+
 
 class SGLanterna {
 
@@ -33,7 +39,7 @@ class SGLanterna {
 
 object SGLanterna {
 
-  var terminal : SwingTerminal = null
+  var terminal : SwingTerminalFrame = null
   var screen : Screen = null
   var guiScreen : GUIScreen = null
   var theWindow : Window = null
@@ -50,18 +56,12 @@ object SGLanterna {
 
   def main( args : Array[String] ) = {
 
-    // these do not draw the screen properly
-    // terminal = TerminalFacade.createTextTerminal();
-    // terminal = TerminalFacade.createCygwinTerminal()
-    // terminal = TerminalFacade.createUnixTerminal()
-    // terminal = TerminalFacade.createTerminal();
-    terminal = TerminalFacade.createSwingTerminal()
-    // terminal.applyBackgroundColor( Terminal.Color.BLUE )
-    // terminal.clearScreen()
-    // terminal.getJFrame().setResizable(false)
-
-    screen = new Screen( terminal, 120, 30 )
-    guiScreen = TerminalFacade.createGUIScreen( screen );
+    val factory = new DefaultTerminalFactory();
+    terminal = factory.createTerminal().asInstanceOf[SwingTerminalFrame]
+    terminal.setVisible(true);
+    terminal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    screen = new DefaultScreen( terminal )
+    guiScreen = new GUIScreen(screen)
 
     screen.startScreen();
 
@@ -97,7 +97,7 @@ object SGLanterna {
   val myCards = ListBuffer[Label]( new Label( "__" ), new Label( "__" ), new Label( "__" ), new Label( "__" ), new Label( "__" ), new Label( "__" ), new Label( "__" ), new Label( "__" ), new Label( "__" ), new Label( "__" ), new Label( "__" ) )
 
   def createComputerPlayerPanel() : Panel = {
-    val p1 = new Panel( Panel.Orientation.HORISONTAL )
+    val p1 = new Panel( Panel.Orientation.HORIZONTAL )
     p1.addComponent( new Label( "My Hand:" ) )
     for ( l <- myCards ) {
       p1.addComponent( l )
@@ -119,7 +119,6 @@ object SGLanterna {
     def doAction() : Unit = {
       if ( playersTurn ) {
         if ( !game.gameState.discards.isEmpty ) {
-          Console.println( "disc" )
           setPlayersDiscard()
           val play = new Take( game, you )
           play.execute()
@@ -138,14 +137,24 @@ object SGLanterna {
   val stockButton = new Button( "__", new Action() {
     def doAction() : Unit = {
       if ( playersTurn ) {
-        Console.println( "stock" )
-        setPlayersDiscard()
+        if ( !game.gameState.stock.isEmpty ) {
+          setPlayersDiscard()
+          val play = new Stock( game, you )
+          play.execute()
+
+          // detect gin
+          if ( game.hasGin( you ) ) {
+          } else {
+          }
+
+          refreshScreen
+        }
       }
     }
   } )
 
   def createStockPanel() : Panel = {
-    val p2 = new Panel( Panel.Orientation.HORISONTAL )
+    val p2 = new Panel( Panel.Orientation.HORIZONTAL )
     p2.addComponent( new Label( "Discard:" ) )
     p2.addComponent( discardButton )
     p2.addComponent( new EmptySpace( 10, 0 ) )
@@ -155,7 +164,7 @@ object SGLanterna {
   }
 
   def createPlayerPanel() : Panel = {
-    val p3 = new Panel( Panel.Orientation.HORISONTAL )
+    val p3 = new Panel( Panel.Orientation.HORIZONTAL )
     p3.addComponent( new Label( "Your Hand:" ) )
     for ( i <- 0 to 10 ) {
       var btn = new CardButton( "__", None, new CardButtonAction() )
@@ -165,7 +174,7 @@ object SGLanterna {
       p3.addComponent( b )
     }
 
-    val buttons = new Panel( Panel.Orientation.HORISONTAL )
+    val buttons = new Panel( Panel.Orientation.HORIZONTAL )
     buttons.addComponent( byRank )
     buttons.addComponent( bySuit )
 
@@ -263,7 +272,7 @@ object SGLanterna {
   val playMessage = new Label( "Start a new game." )
 
   def createPlayPanel() : Panel = {
-    val panel = new Panel( Panel.Orientation.HORISONTAL )
+    val panel = new Panel( Panel.Orientation.HORIZONTAL )
     panel.addComponent( playMessage )
     panel
   }
@@ -274,13 +283,13 @@ object SGLanterna {
   val yourHands = new Label( "0" )
 
   def createScorePanel() : Panel = {
-    val panel1 = new Panel( Panel.Orientation.HORISONTAL )
+    val panel1 = new Panel( Panel.Orientation.HORIZONTAL )
     panel1.addComponent( new Label( "Points Me:" ) )
     panel1.addComponent( myScore )
     panel1.addComponent( new Label( "      You:" ) )
     panel1.addComponent( yourScore )
 
-    val panel2 = new Panel( Panel.Orientation.HORISONTAL )
+    val panel2 = new Panel( Panel.Orientation.HORIZONTAL )
     panel2.addComponent( new Label( "Hands Me:" ) )
     panel2.addComponent( myHands )
     panel2.addComponent( new Label( "      You:" ) )
@@ -295,21 +304,22 @@ object SGLanterna {
   var messages : EditArea = null
 
   def createMessagePanel() : Panel = {
-    val panel = new Panel( Panel.Orientation.HORISONTAL )
+    val panel = new Panel( Panel.Orientation.HORIZONTAL )
     messages = new EditArea( new TerminalSize( 30, 5 ) )
     panel.addComponent( messages )
     panel
   }
 
-  var hints = new TextArea( new TerminalSize( 30, 5 ), "" )
+  var hints : EditArea = null
 
   def createHintPanel() : Panel = {
-    val panel = new Panel( Panel.Orientation.HORISONTAL )
+    val panel = new Panel( Panel.Orientation.HORIZONTAL )
+    hints = new EditArea( new TerminalSize( 50, 10 ) )
     panel.addComponent( hints )
     panel
   }
 
-  val buttonPanel = new Panel( new Border.Standard(), Panel.Orientation.HORISONTAL )
+  val buttonPanel = new Panel( new Border.Standard(), Panel.Orientation.HORIZONTAL )
 
   val choosePlayer = new Button( "Player", new Action() {
     def doAction() : Unit = {
@@ -338,9 +348,57 @@ object SGLanterna {
   }
 
   def refreshCheats() : Unit = {
-
+    hints.setData( chart() )
   }
 
+  def chart() : String = {
+
+    var out = ""
+
+      if ( hintsOn ) {
+
+        out += " A  2  3  4  5  6  7  8  9  T  J  Q  K \n"
+        val suits = List( "C", "D", "H", "S" )
+        val ranks = List( "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K" )
+        val lines = for ( s <- suits ) yield {
+          var line = char2card( s ) + " "
+          line += ranks.map( ( r ) => { findCard( s, r ) } ).mkString( "  " )
+          line
+        }
+        out += lines.mkString( "\n" )
+      }
+
+    out
+  }
+
+  def char2card( c : String ) : String = {
+
+    c match {
+      case "C" => { "\u2663" }
+      case "D" => { "\u2666" }
+      case "H" => { "\u2665" }
+      case "S" => { "\u2660" }
+      case _ => { "J" }
+    }
+  }
+
+  def findCard( s : String, r : String ) : String = {
+    val c = Card.stringToCard( s + r )
+    val state = gameState()
+
+    if ( state.discards.contains( c ) ) {
+      "D"
+    } else if ( state.stock.contains( c ) ) {
+      "S"
+    } else if ( state.hands( me ).cards.contains( c ) ) {
+      "M"
+    } else if ( state.hands( you ).cards.contains( c ) ) {
+      "Y"
+    } else {
+      "_"
+    }
+
+  }
   def gameState() = { game.gameState() }
 
   def resetPlayerCards() = {
@@ -473,3 +531,4 @@ object SGLanterna {
 
   }
 }
+

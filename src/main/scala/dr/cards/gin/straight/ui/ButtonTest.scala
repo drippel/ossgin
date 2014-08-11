@@ -1,6 +1,5 @@
 package dr.cards.gin.straight.ui
 
-import com.googlecode.lanterna.TerminalFacade
 import com.googlecode.lanterna.terminal.Terminal
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.gui.GUIScreen
@@ -9,19 +8,27 @@ import com.googlecode.lanterna.gui.Window
 import com.googlecode.lanterna.gui.component.AbstractComponent
 import com.googlecode.lanterna.gui.TextGraphics
 import com.googlecode.lanterna.gui.Theme.Category
-import com.googlecode.lanterna.terminal.TerminalSize
 import com.googlecode.lanterna.gui.component.Panel
 import com.googlecode.lanterna.gui.component.Button
 import com.googlecode.lanterna.gui.Action
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame
+import com.googlecode.lanterna.screen.DefaultScreen
+import com.googlecode.lanterna.TerminalSize
+import javax.swing.JFrame
+
 
 object ButtonTest {
 
     def main( args : Array[String] ) : Unit =
     {
-        var factory = new TestTerminalFactory()
-        var terminal = factory.createTerminal();
+    val factory = new DefaultTerminalFactory();
+    val terminal = factory.createTerminal().asInstanceOf[SwingTerminalFrame]
+    terminal.setVisible(true);
+    terminal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    val screen = new DefaultScreen( terminal )
+    val guiScreen = new GUIScreen(screen)
 
-        var guiScreen = factory.createGUIScreen()
         guiScreen.getScreen().startScreen();
         guiScreen.setBackgroundRenderer(new DefaultBackgroundRenderer("GUI Test"));
 
@@ -40,7 +47,7 @@ object ButtonTest {
             }
         });
 
-        var buttonPanel = new Panel(Panel.Orientation.HORISONTAL);
+        var buttonPanel = new Panel(Panel.Orientation.HORIZONTAL);
         var button1 = new Button("Button1", new Action() {
             def doAction() =
             {
@@ -60,19 +67,6 @@ object ButtonTest {
         guiScreen.getScreen().stopScreen();
     }
 
-    class TestTerminalFactory {
-
-    def createTerminal() : Terminal =  {
-            TerminalFacade.createTerminal();
-    }
-
-    def createScreen() : Screen = {
-        return TerminalFacade.createScreen(createTerminal());
-    }
-
-    def createGUIScreen() : GUIScreen =  {
-        return TerminalFacade.createGUIScreen(createScreen());
-    }
-}
 
 }
+
